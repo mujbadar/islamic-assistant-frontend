@@ -1,0 +1,144 @@
+.islamic-qa {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.islamic-qa h2 {
+  color: #218380;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.description {
+  color: #bbb;
+  margin-bottom: 30px;
+  text-align: center;
+  font-size: 1.1em;
+}
+
+.question-form {
+  margin-bottom: 30px;
+}
+
+.question-input {
+  width: 100%;
+  padding: 15px;
+  background: #222;
+  color: white;
+  border: 1px solid #218380;
+  border-radius: 8px;
+  font-size: 1em;
+  margin-bottom: 15px;
+  resize: vertical;
+  min-height: 100px;
+}
+
+.question-input:focus {
+  outline: none;
+  border-color: #218380;
+  box-shadow: 0 0 5px rgba(33, 131, 128, 0.3);
+}
+
+.submit-button {
+  background-color: #218380;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 100%;
+}
+
+.submit-button:hover {
+  background-color: #1a6b68;
+}
+
+.submit-button:disabled {
+  background-color: #444;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: #ff6b6b;
+  padding: 10px;
+  border-radius: 6px;
+  background-color: rgba(255, 107, 107, 0.1);
+  margin-bottom: 20px;
+}
+
+.result {
+  margin-top: 30px;
+}
+
+.answer-section {
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  border: 1px solid #218380;
+}
+
+.answer-section h3 {
+  color: #218380;
+  margin-bottom: 15px;
+}
+
+.answer-text {
+  line-height: 1.6;
+  color: #f0f0f0;
+}
+
+.videos-section {
+  margin-top: 30px;
+}
+
+.videos-section h3 {
+  color: #218380;
+  margin-bottom: 20px;
+}
+
+.videos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.video-card {
+  text-decoration: none;
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s;
+  border: 1px solid #218380;
+}
+
+.video-card:hover {
+  transform: translateY(-5px);
+}
+
+.video-thumbnail {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.video-info {
+  padding: 15px;
+}
+
+.video-info h4 {
+  margin: 0 0 10px 0;
+  color: #f0f0f0;
+  font-size: 1em;
+}
+
+.video-info p {
+  margin: 0;
+  color: #bbb;
+  font-size: 0.9em;
+} 

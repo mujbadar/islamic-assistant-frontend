@@ -1,0 +1,149 @@
+.verse-identifier {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.verse-identifier h2 {
+  color: #218380;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.description {
+  color: #bbb;
+  margin-bottom: 30px;
+  text-align: center;
+  font-size: 1.1em;
+}
+
+.recording-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.record-button {
+  background-color: #218380;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  min-width: 200px;
+}
+
+.record-button:hover {
+  background-color: #1a6b68;
+}
+
+.record-button.recording {
+  background-color: #ff6b6b;
+}
+
+.record-button:disabled {
+  background-color: #444;
+  cursor: not-allowed;
+}
+
+.timer {
+  color: #218380;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.error-message {
+  color: #ff6b6b;
+  padding: 10px;
+  border-radius: 6px;
+  background-color: rgba(255, 107, 107, 0.1);
+  margin-bottom: 20px;
+}
+
+.loading {
+  color: #218380;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.result {
+  margin-top: 30px;
+}
+
+.verse-details {
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  border: 1px solid #218380;
+}
+
+.arabic-text {
+  font-size: 1.5em;
+  line-height: 2;
+  margin-bottom: 20px;
+  text-align: right;
+  direction: rtl;
+}
+
+.identification {
+  color: #f0f0f0;
+  line-height: 1.6;
+}
+
+.videos-section {
+  margin-top: 30px;
+}
+
+.videos-section h3 {
+  color: #218380;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.videos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.video-card {
+  text-decoration: none;
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s;
+  border: 1px solid #218380;
+}
+
+.video-card:hover {
+  transform: translateY(-5px);
+}
+
+.video-thumbnail {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.video-info {
+  padding: 15px;
+}
+
+.video-info h4 {
+  margin: 0 0 10px 0;
+  color: #f0f0f0;
+  font-size: 1em;
+}
+
+.video-info p {
+  margin: 0;
+  color: #bbb;
+  font-size: 0.9em;
+} 

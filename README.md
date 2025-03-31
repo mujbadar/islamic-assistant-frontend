@@ -1,3 +1,63 @@
+# Islamic Assistant Frontend
+
+A React-based frontend for the Islamic Assistant application that helps users learn about Islam through Q&A and Quranic verse identification.
+
+## Features
+
+- Ask questions about Islam and get AI-powered answers
+- Record Quranic verses and get them identified
+- View related educational videos
+- Modern, responsive UI with dark theme
+- Real-time audio recording and processing
+
+## Prerequisites
+
+- Node.js (v14 or higher)
+- npm or yarn
+
+## Installation
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/yourusername/islamic-assistant-frontend.git
+cd islamic-assistant-frontend
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Start the development server:
+
+```bash
+npm start
+```
+
+The application will be available at `http://localhost:3000`.
+
+## Environment Variables
+
+Create a `.env` file in the root directory with the following variables:
+
+```
+REACT_APP_API_URL=http://localhost:3000
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
