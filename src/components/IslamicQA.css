@@ -18,6 +18,9 @@
 }
 
 .question-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
   margin-bottom: 30px;
 }
 
@@ -192,4 +195,15 @@
   margin: 0;
   color: #bbb;
   font-size: 0.9em;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .islamic-qa {
+    padding: 15px;
+  }
+
+  .videos-grid {
+    grid-template-columns: 1fr;
+  }
 } 

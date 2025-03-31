@@ -13,6 +13,34 @@ const VerseIdentifier = () => {
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
   const timerRef = useRef(null);
+  const audioContextRef = useRef(null);
+  const analyserRef = useRef(null);
+
+  const checkAudioLevel = (audioBlob) => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        const arrayBuffer = e.target.result;
+        const audioContext = new (window.AudioContext ||
+          window.webkitAudioContext)();
+        const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+
+        // Get the raw audio data
+        const channelData = audioBuffer.getChannelData(0);
+
+        // Calculate RMS (Root Mean Square) value
+        let sum = 0;
+        for (let i = 0; i < channelData.length; i++) {
+          sum += channelData[i] * channelData[i];
+        }
+        const rms = Math.sqrt(sum / channelData.length);
+
+        // If RMS is very low (close to 0), the audio is likely silent
+        resolve(rms > 0.01); // Threshold of 0.01
+      };
+      reader.readAsArrayBuffer(audioBlob);
+    });
+  };
 
   const startRecording = async () => {
     try {
@@ -28,6 +56,16 @@ const VerseIdentifier = () => {
         const audioBlob = new Blob(audioChunksRef.current, {
           type: "audio/webm",
         });
+
+        // Check if audio contains sound
+        const hasSound = await checkAudioLevel(audioBlob);
+        if (!hasSound) {
+          setError(
+            "No audio detected. Please make sure you are speaking or reciting clearly."
+          );
+          return;
+        }
+
         await sendAudioToServer(audioBlob);
       };
 
