@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import axios from "axios";
+import API_URL from "../config";
 import "./VerseIdentifier.css";
 
 const VerseIdentifier = () => {
@@ -72,7 +73,7 @@ const VerseIdentifier = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/identify-verse",
+        `${API_URL}/api/identify-verse`,
         formData,
         {
           headers: {

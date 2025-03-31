@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import API_URL from "../config";
 import "./IslamicQA.css";
 
 const IslamicQA = () => {
@@ -20,7 +21,7 @@ const IslamicQA = () => {
     setResult(null);
 
     try {
-      const response = await axios.post("http://localhost:3000/api/ask", {
+      const response = await axios.post(`${API_URL}/api/ask`, {
         question,
       });
       setResult(response.data);
