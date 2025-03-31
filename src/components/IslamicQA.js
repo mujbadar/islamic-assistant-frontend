@@ -69,7 +69,34 @@ const IslamicQA = () => {
         <div className="result">
           <div className="answer-section">
             <h3>Answer</h3>
-            <p className="answer-text">{result.summary}</p>
+            <div className="answer-text">
+              {result.summary.split("\n").map((line, index) => {
+                // Check if line starts with a bullet point or number
+                if (
+                  line.trim().startsWith("•") ||
+                  line.trim().startsWith("-") ||
+                  /^\d+\./.test(line.trim())
+                ) {
+                  return (
+                    <p key={index} className="bullet-point">
+                      {line}
+                    </p>
+                  );
+                }
+                // Check if line is a heading (no bullet points and shorter)
+                else if (line.trim().length < 50 && !line.includes("•")) {
+                  return (
+                    <h4 key={index} className="section-heading">
+                      {line}
+                    </h4>
+                  );
+                }
+                // Regular paragraph
+                else {
+                  return <p key={index}>{line}</p>;
+                }
+              })}
+            </div>
           </div>
 
           {result.videos && result.videos.length > 0 && (
