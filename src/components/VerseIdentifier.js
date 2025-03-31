@@ -131,6 +131,31 @@ const VerseIdentifier = () => {
     }
   };
 
+  const formatVerseIdentification = (text) => {
+    return text.split("\n").map((line, index) => {
+      // Check if line is a heading (starts with a number and dot)
+      if (/^\d+\.\s+\*\*/.test(line)) {
+        return (
+          <h4 key={index} className="section-heading">
+            {line.replace(/\*\*/g, "")}
+          </h4>
+        );
+      }
+      // Check if line is a bullet point
+      else if (line.trim().startsWith("-")) {
+        return (
+          <p key={index} className="bullet-point">
+            {line}
+          </p>
+        );
+      }
+      // Regular paragraph
+      else {
+        return <p key={index}>{line}</p>;
+      }
+    });
+  };
+
   return (
     <div className="verse-identifier">
       <h2>Quranic Verse Identifier</h2>
@@ -159,10 +184,11 @@ const VerseIdentifier = () => {
 
       {result && (
         <div className="result">
-          <h3>Identified Verse</h3>
-          <div className="verse-details">
-            <p className="arabic-text">{result.transcribedText}</p>
-            <div className="identification">{result.verseIdentification}</div>
+          <div className="answer-section">
+            <h3>Identified Verse</h3>
+            <div className="answer-text">
+              {formatVerseIdentification(result.verseIdentification)}
+            </div>
           </div>
 
           {result.videos && result.videos.length > 0 && (

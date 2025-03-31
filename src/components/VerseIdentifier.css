@@ -5,16 +5,15 @@
 }
 
 .verse-identifier h2 {
-  color: #218380;
+  color: #2c3e50;
   margin-bottom: 20px;
   text-align: center;
 }
 
 .description {
-  color: #bbb;
-  margin-bottom: 30px;
+  color: #666;
   text-align: center;
-  font-size: 1.1em;
+  margin-bottom: 30px;
 }
 
 .recording-controls {
@@ -26,47 +25,50 @@
 }
 
 .record-button {
-  background-color: #218380;
-  color: white;
   padding: 12px 24px;
+  font-size: 16px;
+  background-color: #3498db;
+  color: white;
   border: none;
-  border-radius: 6px;
-  font-size: 1em;
+  border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s;
-  min-width: 200px;
 }
 
 .record-button:hover {
-  background-color: #1a6b68;
+  background-color: #2980b9;
 }
 
 .record-button.recording {
-  background-color: #ff6b6b;
+  background-color: #e74c3c;
+}
+
+.record-button.recording:hover {
+  background-color: #c0392b;
 }
 
 .record-button:disabled {
-  background-color: #444;
+  background-color: #bdc3c7;
   cursor: not-allowed;
 }
 
 .timer {
-  color: #218380;
-  font-size: 1.2em;
-  font-weight: bold;
+  font-size: 14px;
+  color: #666;
 }
 
 .error-message {
-  color: #ff6b6b;
-  padding: 10px;
-  border-radius: 6px;
-  background-color: rgba(255, 107, 107, 0.1);
+  background-color: #fde8e8;
+  color: #c53030;
+  padding: 12px;
+  border-radius: 5px;
   margin-bottom: 20px;
+  text-align: center;
 }
 
 .loading {
-  color: #218380;
   text-align: center;
+  color: #666;
   margin: 20px 0;
 }
 
@@ -74,25 +76,35 @@
   margin-top: 30px;
 }
 
-.verse-details {
-  background-color: rgba(0, 0, 0, 0.6);
-  padding: 20px;
+.answer-section {
+  background-color: white;
   border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 30px;
-  border: 1px solid #218380;
 }
 
-.arabic-text {
-  font-size: 1.5em;
-  line-height: 2;
+.answer-section h3 {
+  color: #2c3e50;
   margin-bottom: 20px;
-  text-align: right;
-  direction: rtl;
+  font-size: 1.5em;
 }
 
-.identification {
-  color: #f0f0f0;
+.answer-text {
   line-height: 1.6;
+  color: #333;
+}
+
+.section-heading {
+  color: #2c3e50;
+  font-size: 1.2em;
+  margin: 20px 0 10px;
+  font-weight: 600;
+}
+
+.bullet-point {
+  margin-left: 20px;
+  margin-bottom: 10px;
 }
 
 .videos-section {
@@ -100,9 +112,9 @@
 }
 
 .videos-section h3 {
-  color: #218380;
+  color: #2c3e50;
   margin-bottom: 20px;
-  text-align: center;
+  font-size: 1.5em;
 }
 
 .videos-grid {
@@ -112,14 +124,13 @@
 }
 
 .video-card {
-  text-decoration: none;
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: white;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-  transition: transform 0.3s;
-  border: 1px solid #218380;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s;
 }
 
 .video-card:hover {
@@ -137,13 +148,23 @@
 }
 
 .video-info h4 {
-  margin: 0 0 10px 0;
-  color: #f0f0f0;
+  color: #2c3e50;
+  margin: 0 0 5px;
   font-size: 1em;
 }
 
 .video-info p {
+  color: #666;
   margin: 0;
-  color: #bbb;
   font-size: 0.9em;
+}
+
+@media (max-width: 600px) {
+  .verse-identifier {
+    padding: 15px;
+  }
+
+  .videos-grid {
+    grid-template-columns: 1fr;
+  }
 } 
