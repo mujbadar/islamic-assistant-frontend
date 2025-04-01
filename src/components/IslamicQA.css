@@ -116,13 +116,6 @@
   color: #f0f0f0;
 }
 
-.answer-text .bullet-point::before {
-  content: "•";
-  position: absolute;
-  left: 0;
-  color: #4a90e2;
-}
-
 /* Sub-points indentation */
 .answer-text p:has(+ .bullet-point) {
   margin-bottom: 0.5rem;

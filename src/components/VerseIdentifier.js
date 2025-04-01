@@ -45,17 +45,54 @@ const VerseIdentifier = () => {
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      mediaRecorderRef.current = new MediaRecorder(stream);
+      mediaRecorderRef.current = new MediaRecorder(stream, {
+        mimeType: "audio/webm;codecs=opus",
+      });
       audioChunksRef.current = [];
 
+      // Create audio context for pre-recording buffer
+      audioContextRef.current = new (window.AudioContext ||
+        window.webkitAudioContext)();
+      analyserRef.current = audioContextRef.current.createAnalyser();
+      const source = audioContextRef.current.createMediaStreamSource(stream);
+      source.connect(analyserRef.current);
+
+      // Start recording after a small delay
+      setTimeout(() => {
+        mediaRecorderRef.current.start(1000); // Collect data every second
+        setIsRecording(true);
+        setRecordingTime(0);
+        setError(null);
+        setResult(null);
+
+        // Start timer
+        timerRef.current = setInterval(() => {
+          setRecordingTime((prevTime) => {
+            if (prevTime >= 15) {
+              stopRecording();
+              return 15;
+            }
+            return prevTime + 1;
+          });
+        }, 1000);
+      }, 500); // 500ms delay before starting
+
       mediaRecorderRef.current.ondataavailable = (event) => {
-        audioChunksRef.current.push(event.data);
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
+        }
       };
 
       mediaRecorderRef.current.onstop = async () => {
         const audioBlob = new Blob(audioChunksRef.current, {
           type: "audio/webm",
         });
+
+        // Clean up audio context
+        if (audioContextRef.current) {
+          await audioContextRef.current.close();
+          audioContextRef.current = null;
+        }
 
         // Check if audio contains sound
         const hasSound = await checkAudioLevel(audioBlob);
@@ -68,23 +105,6 @@ const VerseIdentifier = () => {
 
         await sendAudioToServer(audioBlob);
       };
-
-      mediaRecorderRef.current.start();
-      setIsRecording(true);
-      setRecordingTime(0);
-      setError(null);
-      setResult(null);
-
-      // Start timer
-      timerRef.current = setInterval(() => {
-        setRecordingTime((prevTime) => {
-          if (prevTime >= 15) {
-            stopRecording();
-            return 15;
-          }
-          return prevTime + 1;
-        });
-      }, 1000);
     } catch (err) {
       setError(
         "Error accessing microphone. Please ensure you have granted microphone permissions."
@@ -133,25 +153,25 @@ const VerseIdentifier = () => {
 
   const formatVerseIdentification = (text) => {
     return text.split("\n").map((line, index) => {
-      // Check if line is a heading (starts with a number and dot)
-      if (/^\d+\.\s+\*\*/.test(line)) {
+      // Remove ** markers and bullet points from the line
+      const cleanLine = line.replace(/\*\*/g, "").replace(/^[•-]\s*/, ""); // Remove bullet points
+
+      // Skip empty lines
+      if (!cleanLine.trim()) {
+        return null;
+      }
+
+      // Check if line starts with ### (header)
+      if (cleanLine.trim().startsWith("###")) {
         return (
           <h4 key={index} className="section-heading">
-            {line.replace(/\*\*/g, "")}
+            {cleanLine.replace(/^###\s*/, "").trim()}
           </h4>
-        );
-      }
-      // Check if line is a bullet point
-      else if (line.trim().startsWith("-")) {
-        return (
-          <p key={index} className="bullet-point">
-            {line}
-          </p>
         );
       }
       // Regular paragraph
       else {
-        return <p key={index}>{line}</p>;
+        return <p key={index}>{cleanLine}</p>;
       }
     });
   };
@@ -160,7 +180,7 @@ const VerseIdentifier = () => {
     <div className="verse-identifier">
       <h2>Quranic Verse Identifier</h2>
       <p className="description">
-        Record up to 15 seconds of Quranic recitation to identify the verse.
+        Record 15 seconds of Quranic recitation to identify the verse.
       </p>
 
       <div className="recording-controls">
@@ -179,7 +199,14 @@ const VerseIdentifier = () => {
       {error && <div className="error-message">{error}</div>}
 
       {isLoading && (
-        <div className="loading">Processing audio... Please wait.</div>
+        <div className="loading">
+          <div className="loading-spinner"></div>
+          <div className="loading-text">Processing Your Recitation</div>
+          <div className="loading-subtext">
+            We're analyzing your audio and identifying the verse. This may take
+            a few moments.
+          </div>
+        </div>
       )}
 
       {result && (
