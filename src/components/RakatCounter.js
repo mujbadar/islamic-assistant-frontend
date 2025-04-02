@@ -6,8 +6,7 @@ const RakatCounter = () => {
   const canvasRef = useRef(null);
   const [isCounting, setIsCounting] = useState(false);
   const [currentRakat, setCurrentRakat] = useState(0);
-  const [currentPosition, setCurrentPosition] = useState("standing");
-  const [sajdaCount, setSajdaCount] = useState(0);
+  const [prayerState, setPrayerState] = useState("standing");
   const [deviceType, setDeviceType] = useState("desktop"); // 'desktop' or 'mobile'
   const [error, setError] = useState(null);
 
@@ -110,16 +109,34 @@ const RakatCounter = () => {
           ) {
             lastPositionChange = currentTime;
 
-            if (currentPosition === "standing") {
-              setCurrentPosition("sajda");
-              setSajdaCount((prev) => prev + 1);
-
-              if (sajdaCount === 1) {
+            switch (prayerState) {
+              case "standing":
+                setPrayerState("ruku");
+                break;
+              case "ruku":
+                setPrayerState("postRuku");
+                break;
+              case "postRuku":
+                setPrayerState("firstSajda");
+                break;
+              case "firstSajda":
+                setPrayerState("sitting");
+                break;
+              case "sitting":
+                setPrayerState("secondSajda");
+                break;
+              case "secondSajda":
+                if (currentRakat % 2 === 0) {
+                  setPrayerState("finalSitting");
+                } else {
+                  setPrayerState("standing");
+                  setCurrentRakat((prev) => prev + 1);
+                }
+                break;
+              case "finalSitting":
+                setPrayerState("standing");
                 setCurrentRakat((prev) => prev + 1);
-                setSajdaCount(0);
-              }
-            } else {
-              setCurrentPosition("standing");
+                break;
             }
           }
         }
@@ -138,34 +155,35 @@ const RakatCounter = () => {
         cancelAnimationFrame(animationFrameId);
       }
     };
-  }, [isCounting, currentPosition, sajdaCount, deviceType]);
+  }, [isCounting, prayerState, deviceType, currentRakat]);
 
   const toggleCounting = () => {
     setIsCounting(!isCounting);
     if (!isCounting) {
       setCurrentRakat(0);
-      setCurrentPosition("standing");
-      setSajdaCount(0);
+      setPrayerState("standing");
     }
   };
 
   // Update the display text based on the prayer sequence
-  const getCurrentPositionDisplay = () => {
-    switch (currentPosition) {
+  const getPositionDisplay = () => {
+    switch (prayerState) {
       case "standing":
         return "Standing";
-      case "sajda":
-        return "First Sajda";
-      case "sitting":
-        return "Sitting";
       case "ruku":
         return "Ruku";
       case "postRuku":
         return "Standing after Ruku";
+      case "firstSajda":
+        return "First Sajda";
+      case "sitting":
+        return "Sitting";
       case "secondSajda":
         return "Second Sajda";
+      case "finalSitting":
+        return "Final Sitting";
       default:
-        return currentPosition;
+        return prayerState;
     }
   };
 
