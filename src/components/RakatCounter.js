@@ -68,41 +68,70 @@ const RakatCounter = () => {
       const currentFrame = ctx.getImageData(0, 0, width, height);
 
       if (lastFrame) {
-        let motionAmount = 0;
         const data1 = currentFrame.data;
         const data2 = lastFrame.data;
 
-        // For mobile (flat position), focus on the center of the frame
         if (deviceType === "mobile") {
-          // Calculate center region (middle 50% of frame)
-          const centerStart = Math.floor((width * height * 2) / 5) * 4; // 40% from top
-          const centerEnd = Math.floor((width * height * 3) / 5) * 4; // 60% from top
+          // Mobile detection remains the same as it works well for face detection
+          let motionAmount = 0;
+          const centerStart = Math.floor((width * height * 2) / 5) * 4;
+          const centerEnd = Math.floor((width * height * 3) / 5) * 4;
 
           for (let i = centerStart; i < centerEnd; i += 40) {
             const diff = Math.abs(data1[i] - data2[i]);
             motionAmount += diff;
           }
           motionAmount = motionAmount / ((centerEnd - centerStart) / 40);
+          motionHistory.push(motionAmount);
         } else {
-          // For desktop, check the entire frame
-          for (let i = 0; i < data1.length; i += 40) {
-            const diff = Math.abs(data1[i] - data2[i]);
-            motionAmount += diff;
-          }
-          motionAmount = motionAmount / (data1.length / 40);
-        }
+          // For desktop, split frame into top and bottom sections
+          const topMotion = { amount: 0, pixels: 0 };
+          const bottomMotion = { amount: 0, pixels: 0 };
+          const middleY = height / 2;
 
-        motionHistory.push(motionAmount);
+          // Sample pixels in grid pattern for efficiency
+          for (let y = 0; y < height; y += 4) {
+            for (let x = 0; x < width; x += 4) {
+              const index = (y * width + x) * 4;
+              // Compare all color channels for more accurate motion detection
+              const diffR = Math.abs(data1[index] - data2[index]);
+              const diffG = Math.abs(data1[index + 1] - data2[index + 1]);
+              const diffB = Math.abs(data1[index + 2] - data2[index + 2]);
+              const diff = (diffR + diffG + diffB) / 3;
+
+              if (y < middleY) {
+                topMotion.amount += diff;
+                topMotion.pixels++;
+              } else {
+                bottomMotion.amount += diff;
+                bottomMotion.pixels++;
+              }
+            }
+          }
+
+          // Calculate average motion for top and bottom
+          const topAvg = topMotion.amount / topMotion.pixels;
+          const bottomAvg = bottomMotion.amount / bottomMotion.pixels;
+
+          // Calculate vertical motion ratio - higher value means more vertical movement
+          const verticalMotion = Math.abs(topAvg - bottomAvg);
+
+          // Ignore small movements by applying a minimum difference threshold
+          const minDiffThreshold = 5;
+          const normalizedVerticalMotion =
+            verticalMotion > minDiffThreshold ? verticalMotion : 0;
+
+          motionHistory.push(normalizedVerticalMotion);
+        }
 
         if (motionHistory.length > HISTORY_LENGTH) {
           motionHistory.shift();
 
           const maxMotion = Math.max(...motionHistory);
           const currentTime = Date.now();
+          const motionThreshold = deviceType === "mobile" ? 10 : 15; // Increased threshold for vertical motion
 
-          // Different thresholds for mobile and desktop
-          const motionThreshold = deviceType === "mobile" ? 10 : 7;
-
+          // Only trigger on significant vertical motion differences
           if (
             currentTime - lastPositionChange > POSITION_COOLDOWN &&
             maxMotion > motionThreshold
@@ -126,7 +155,7 @@ const RakatCounter = () => {
                 setPrayerState("secondSajda");
                 break;
               case "secondSajda":
-                if (currentRakat % 2 === 0) {
+                if (currentRakat % 2 === 1) {
                   setPrayerState("finalSitting");
                 } else {
                   setPrayerState("standing");
@@ -136,6 +165,9 @@ const RakatCounter = () => {
               case "finalSitting":
                 setPrayerState("standing");
                 setCurrentRakat((prev) => prev + 1);
+                break;
+              default:
+                setPrayerState("standing"); // Reset to standing if we encounter an unknown state
                 break;
             }
           }
@@ -189,33 +221,8 @@ const RakatCounter = () => {
 
   return (
     <div className="rakat-counter">
-      <div className="camera-container">
-        <video
-          ref={videoRef}
-          className="camera-feed"
-          autoPlay
-          playsInline
-          muted
-          width="640"
-          height="480"
-        />
-        <canvas
-          ref={canvasRef}
-          className="motion-canvas"
-          width="640"
-          height="480"
-        />
-      </div>
-
       <div className="status">
-        <div className="device-type">
-          Mode:{" "}
-          {deviceType === "mobile" ? "Phone (lay flat)" : "Laptop/Desktop"}
-        </div>
-        <div className="current-position">
-          Position: {getCurrentPositionDisplay()}
-          {currentPosition === "sajda" && ` (${sajdaCount}/2)`}
-        </div>
+        <div className="current-position">Position: {getPositionDisplay()}</div>
         <div className="rakat-count">Rakats Completed: {currentRakat}</div>
       </div>
 
@@ -247,6 +254,23 @@ const RakatCounter = () => {
             <li>Press Start Counting before beginning prayer</li>
           </ol>
         )}
+      </div>
+      <div className="camera-container">
+        <video
+          ref={videoRef}
+          className="camera-feed"
+          autoPlay
+          playsInline
+          muted
+          width="640"
+          height="480"
+        />
+        <canvas
+          ref={canvasRef}
+          className="motion-canvas"
+          width="640"
+          height="480"
+        />
       </div>
     </div>
   );
