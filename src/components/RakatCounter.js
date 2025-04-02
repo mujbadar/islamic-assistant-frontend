@@ -130,7 +130,13 @@ const RakatCounter = () => {
 
           const maxMotion = Math.max(...motionHistory);
           const currentTime = Date.now();
-          const motionThreshold = deviceType === "mobile" ? 10 : 15; // Increased threshold for vertical motion
+          // Base threshold
+          let motionThreshold = deviceType === "mobile" ? 10 : 15;
+
+          // Increase threshold for standing up from sajda/sitting
+          if (prayerState === "secondSajda" || prayerState === "finalSitting") {
+            motionThreshold = deviceType === "mobile" ? 25 : 35; // Significantly higher threshold for standing up
+          }
 
           // Only trigger on significant vertical motion differences
           if (
@@ -159,23 +165,13 @@ const RakatCounter = () => {
                 if (currentRakat % 2 === 1) {
                   setPrayerState("finalSitting");
                 } else {
-                  if (!waitingForSecondMotion) {
-                    setWaitingForSecondMotion(true);
-                  } else {
-                    setPrayerState("standing");
-                    setCurrentRakat((prev) => prev + 1);
-                    setWaitingForSecondMotion(false);
-                  }
+                  setPrayerState("standing");
+                  setCurrentRakat((prev) => prev + 1);
                 }
                 break;
               case "finalSitting":
-                if (!waitingForSecondMotion) {
-                  setWaitingForSecondMotion(true);
-                } else {
-                  setPrayerState("standing");
-                  setCurrentRakat((prev) => prev + 1);
-                  setWaitingForSecondMotion(false);
-                }
+                setPrayerState("standing");
+                setCurrentRakat((prev) => prev + 1);
                 break;
               default:
                 setPrayerState("standing");
