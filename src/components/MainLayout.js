@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import VerseIdentifier from "./VerseIdentifier";
 import IslamicQA from "./IslamicQA";
+import RakatCounter from "./RakatCounter";
 import "./MainLayout.css";
 
 const MainLayout = () => {
-  const [activeTab, setActiveTab] = useState("qa"); // "qa" or "recorder"
+  const [activeTab, setActiveTab] = useState("qa"); // "qa", "recorder", or "rakat"
 
   return (
     <div className="main-layout">
@@ -23,11 +24,23 @@ const MainLayout = () => {
           >
             Verse Identifier
           </button>
+          <button
+            className={`nav-button ${activeTab === "rakat" ? "active" : ""}`}
+            onClick={() => setActiveTab("rakat")}
+          >
+            Rakat Counter
+          </button>
         </nav>
       </header>
 
       <main className="main-content">
-        {activeTab === "qa" ? <IslamicQA /> : <VerseIdentifier />}
+        {activeTab === "qa" ? (
+          <IslamicQA />
+        ) : activeTab === "recorder" ? (
+          <VerseIdentifier />
+        ) : (
+          <RakatCounter />
+        )}
       </main>
     </div>
   );
