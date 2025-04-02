@@ -9,6 +9,7 @@ const RakatCounter = () => {
   const [prayerState, setPrayerState] = useState("standing");
   const [deviceType, setDeviceType] = useState("desktop"); // 'desktop' or 'mobile'
   const [error, setError] = useState(null);
+  const [waitingForSecondMotion, setWaitingForSecondMotion] = useState(false);
 
   // Detect device type
   useEffect(() => {
@@ -158,16 +159,26 @@ const RakatCounter = () => {
                 if (currentRakat % 2 === 1) {
                   setPrayerState("finalSitting");
                 } else {
-                  setPrayerState("standing");
-                  setCurrentRakat((prev) => prev + 1);
+                  if (!waitingForSecondMotion) {
+                    setWaitingForSecondMotion(true);
+                  } else {
+                    setPrayerState("standing");
+                    setCurrentRakat((prev) => prev + 1);
+                    setWaitingForSecondMotion(false);
+                  }
                 }
                 break;
               case "finalSitting":
-                setPrayerState("standing");
-                setCurrentRakat((prev) => prev + 1);
+                if (!waitingForSecondMotion) {
+                  setWaitingForSecondMotion(true);
+                } else {
+                  setPrayerState("standing");
+                  setCurrentRakat((prev) => prev + 1);
+                  setWaitingForSecondMotion(false);
+                }
                 break;
               default:
-                setPrayerState("standing"); // Reset to standing if we encounter an unknown state
+                setPrayerState("standing");
                 break;
             }
           }
