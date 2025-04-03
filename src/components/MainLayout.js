@@ -1,46 +1,50 @@
-import React, { useState } from "react";
+import React from "react";
+import { NavLink, Routes, Route, Navigate } from "react-router-dom";
 import VerseIdentifier from "./VerseIdentifier";
 import IslamicQA from "./IslamicQA";
 import RakatCounter from "./RakatCounter";
 import "./MainLayout.css";
 
 const MainLayout = () => {
-  const [activeTab, setActiveTab] = useState("qa"); // "qa", "recorder", or "rakat"
-
   return (
     <div className="main-layout">
       <header className="app-header">
         <h1>Islamic Assistant</h1>
         <nav className="main-nav">
-          <button
-            className={`nav-button ${activeTab === "qa" ? "active" : ""}`}
-            onClick={() => setActiveTab("qa")}
+          <NavLink
+            to="/qa"
+            className={({ isActive }) =>
+              `nav-button ${isActive ? "active" : ""}`
+            }
           >
             Ask About Islam
-          </button>
-          <button
-            className={`nav-button ${activeTab === "recorder" ? "active" : ""}`}
-            onClick={() => setActiveTab("recorder")}
+          </NavLink>
+          <NavLink
+            to="/verse"
+            className={({ isActive }) =>
+              `nav-button ${isActive ? "active" : ""}`
+            }
           >
             Verse Identifier
-          </button>
-          <button
-            className={`nav-button ${activeTab === "rakat" ? "active" : ""}`}
-            onClick={() => setActiveTab("rakat")}
+          </NavLink>
+          <NavLink
+            to="/rakat"
+            className={({ isActive }) =>
+              `nav-button ${isActive ? "active" : ""}`
+            }
           >
             Rakat Counter
-          </button>
+          </NavLink>
         </nav>
       </header>
 
       <main className="main-content">
-        {activeTab === "qa" ? (
-          <IslamicQA />
-        ) : activeTab === "recorder" ? (
-          <VerseIdentifier />
-        ) : (
-          <RakatCounter />
-        )}
+        <Routes>
+          <Route path="/qa" element={<IslamicQA />} />
+          <Route path="/verse" element={<VerseIdentifier />} />
+          <Route path="/rakat" element={<RakatCounter />} />
+          <Route path="/" element={<Navigate to="/qa" replace />} />
+        </Routes>
       </main>
     </div>
   );
