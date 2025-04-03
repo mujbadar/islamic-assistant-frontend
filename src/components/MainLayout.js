@@ -27,14 +27,14 @@ const MainLayout = () => {
           >
             Verse Identifier
           </NavLink>
-          <NavLink
+          {/* <NavLink
             to="/rakat"
             className={({ isActive }) =>
               `nav-button ${isActive ? "active" : ""}`
             }
           >
             Rakat Counter
-          </NavLink>
+          </NavLink> */}
         </nav>
       </header>
 
@@ -42,7 +42,7 @@ const MainLayout = () => {
         <Routes>
           <Route path="/qa" element={<IslamicQA />} />
           <Route path="/verse" element={<VerseIdentifier />} />
-          <Route path="/rakat" element={<RakatCounter />} />
+          {/* <Route path="/rakat" element={<RakatCounter />} /> */}
           <Route path="/" element={<Navigate to="/qa" replace />} />
         </Routes>
       </main>
