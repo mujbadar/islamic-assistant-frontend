@@ -9,7 +9,6 @@ const RakatCounter = () => {
   const [prayerState, setPrayerState] = useState("standing");
   const [deviceType, setDeviceType] = useState("desktop"); // 'desktop' or 'mobile'
   const [error, setError] = useState(null);
-  const [waitingForSecondMotion, setWaitingForSecondMotion] = useState(false);
 
   // Detect device type
   useEffect(() => {
@@ -135,7 +134,7 @@ const RakatCounter = () => {
 
           // Increase threshold for standing up from sajda/sitting
           if (prayerState === "secondSajda" || prayerState === "finalSitting") {
-            motionThreshold = deviceType === "mobile" ? 25 : 35; // Significantly higher threshold for standing up
+            motionThreshold = deviceType === "mobile" ? 15 : 20; // Significantly higher threshold for standing up
           }
 
           // Only trigger on significant vertical motion differences
